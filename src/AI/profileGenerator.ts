@@ -11,11 +11,10 @@ const apiKey = process.env.GOOGLE_API_KEY;
 
 if (!apiKey) {
   console.error('Google API key is not set.');
-  process.exit(1); // Exit the process if the API key is not set
+  process.exit(1); 
 }
 
 const genAI = new GoogleGenerativeAI(apiKey);
-
 
 router.post('/generate-content', async (req, res) => {
     try {
@@ -28,9 +27,7 @@ router.post('/generate-content', async (req, res) => {
 
       // For text-only input, use the gemini-pro model
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  
-    //   const prompt = "I am a frontend. Give me about 3 interesting descriptions/bio";
-  
+    
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = await response.text();
