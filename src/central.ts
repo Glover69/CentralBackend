@@ -13,7 +13,7 @@ const port = process.env.PORT;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-const allowedOrigins = ['http://localhost:4200', 'http://localhost:3000', 'https://mpampacereals.com', 'https://www.mpampacereals.com', 'https://data-collection-nine.vercel.app', 'http://localhost:8000'];
+const allowedOrigins = ['http://localhost:4200', 'http://localhost:3000', 'https://mpampacereals.com', 'https://www.mpampacereals.com', 'https://data-collection-nine.vercel.app', 'http://localhost:8000', 'https://cv-gen-six.vercel.app'];
 
 // Use CORS middleware with specific origins
 app.use(cors({
