@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "name": "central-backend",
+    "builds": [
+      {
+        "src": "/dist/central.js", 
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/dist/central.js"
+      }
+    ]
+  }
