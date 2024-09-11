@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.7.1",
+    "aws-sdk": "^2.1691.0",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -22,6 +23,7 @@
     "openai": "^4.38.2",
     "puppeteer": "^22.6.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "uuidv4": "^6.2.13"
   }
 }

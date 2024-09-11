@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import * as dotenv from "dotenv";
-import puppeteer from "puppeteer";
 import cors from "cors";
-import axios from "axios";
 import { CVGeneratorRoutes } from "./cv-generator/routes/CV-GeneratorRoutes";
 import { profileGeneratorRoutes } from "./AI/profileGenerator";
+import { connectDB } from "./database";
+import { authRoutes } from "./cv-generator/routes/auth.routes";
 
 dotenv.config();
 
@@ -26,9 +26,13 @@ app.use(cors({
   },
 }));
 
+// Connect to MongoDB
+connectDB();
+
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
 app.use('/api/cv-generator', CVGeneratorRoutes);
 app.use('/api/ai', profileGeneratorRoutes)
+app.use('/api/auth', authRoutes);
