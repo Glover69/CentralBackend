@@ -31,7 +31,8 @@ const UserSchema = new mongoose_1.Schema({
     profile: { type: String, required: false },
     isEmailVerified: { type: Boolean, required: true },
     authID: { type: String, required: true },
-    customerID: { type: String }
+    customerID: { type: String },
+    collectionID: { type: String }
 }, { collection: 'users' });
 const UserModel = mongoose_1.default.model('users', UserSchema);
 exports.UserModel = UserModel;

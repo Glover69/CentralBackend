@@ -33,6 +33,7 @@ const CV_GeneratorRoutes_1 = require("./cv-generator/routes/CV-GeneratorRoutes")
 const profileGenerator_1 = require("./AI/profileGenerator");
 const database_1 = require("./database");
 const auth_routes_1 = require("./cv-generator/routes/auth.routes");
+const collection_routes_1 = require("./cv-generator/routes/collection.routes");
 dotenv.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
@@ -58,3 +59,4 @@ app.listen(port, () => {
 app.use('/api/cv-generator', CV_GeneratorRoutes_1.CVGeneratorRoutes);
 app.use('/api/ai', profileGenerator_1.profileGeneratorRoutes);
 app.use('/api/auth', auth_routes_1.authRoutes);
+app.use('/api/collections', collection_routes_1.collectionRoutes);

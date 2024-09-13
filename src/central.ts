@@ -5,6 +5,7 @@ import { CVGeneratorRoutes } from "./cv-generator/routes/CV-GeneratorRoutes";
 import { profileGeneratorRoutes } from "./AI/profileGenerator";
 import { connectDB } from "./database";
 import { authRoutes } from "./cv-generator/routes/auth.routes";
+import { collectionRoutes } from "./cv-generator/routes/collection.routes";
 
 dotenv.config();
 
@@ -36,3 +37,5 @@ app.listen(port, () => {
 app.use('/api/cv-generator', CVGeneratorRoutes);
 app.use('/api/ai', profileGeneratorRoutes)
 app.use('/api/auth', authRoutes);
+app.use('/api/collections', collectionRoutes);
+

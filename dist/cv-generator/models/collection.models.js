@@ -25,10 +25,51 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CollectionModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+const SkillsSchema = new mongoose_1.Schema({
+    name: { type: String, required: true },
+    color: { type: String, required: true },
+    backgroundColor: { type: String, required: true },
+    filter: { type: String, required: true },
+});
+const ExperiencesSchema = new mongoose_1.Schema({
+    jobTitle: { type: String, required: true, trim: true },
+    company: { type: String, required: true, trim: true },
+    location: { type: String, required: true, trim: true },
+    type: { type: String, required: true, trim: true },
+    startDate: { type: String, required: true },
+    endDate: { type: String, required: false },
+    points: { type: [String], required: false },
+});
+const EducationSchema = new mongoose_1.Schema({
+    institution: { type: String, required: true },
+    certification: { type: String, required: true },
+    fieldOfStudy: { type: String, required: true },
+    startDate: { type: String, required: true },
+    endDate: { type: String, required: false },
+});
+const TemplateInfoSchema = new mongoose_1.Schema({
+    templateID: { type: String, required: false },
+});
+const DataSchema = new mongoose_1.Schema({
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    jobTitle: { type: String, required: true },
+    profileImage: { type: String, required: true },
+    website: { type: String, required: false },
+    linkedIn: { type: String, required: false },
+    github: { type: String, required: false },
+    email: { type: String, required: false },
+    phone: { type: String, required: false },
+    profile: { type: String, required: true },
+    skills: [SkillsSchema],
+    experiences: [ExperiencesSchema],
+    education: [EducationSchema],
+    templateInfo: [TemplateInfoSchema],
+});
 const CollectionSchema = new mongoose_1.Schema({
     collectionID: { type: String, required: true },
-    userID: { type: String, required: true },
-    files: []
-}, { collection: 'collections' });
-const CollectionModel = mongoose_1.default.model('collections', CollectionSchema);
+    customerID: { type: String, required: true },
+    files: [DataSchema],
+}, { collection: "collections" });
+const CollectionModel = mongoose_1.default.model("collections", CollectionSchema);
 exports.CollectionModel = CollectionModel;
