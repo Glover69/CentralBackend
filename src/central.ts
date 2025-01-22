@@ -4,8 +4,8 @@ import cors from "cors";
 import { CVGeneratorRoutes } from "./cv-generator/routes/CV-GeneratorRoutes";
 import { profileGeneratorRoutes } from "./AI/profileGenerator";
 import { connectDB } from "./database";
-import { authRoutes } from "./cv-generator/routes/auth.routes";
 import { collectionRoutes } from "./cv-generator/routes/collection.routes";
+import authRoutes from "./cv-generator/routes/auth.routes";
 
 dotenv.config();
 
