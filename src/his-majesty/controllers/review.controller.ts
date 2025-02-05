@@ -19,7 +19,9 @@ export const createReview = async (req: Request, res: Response) => {
           ratingValue,
           reviewMessage,
           reviewTitle,
-          reviewerName,
+          firstName,
+          lastName,
+          initials,
           email,
           profileImage,
           productId
@@ -30,11 +32,15 @@ export const createReview = async (req: Request, res: Response) => {
           ratingValue,
           reviewMessage,
           reviewTitle,
-          reviewerName,
+          firstName,
+          lastName,
+          initials,
           email,
           profileImage,
           productId,
         };
+
+        reviewData.initials = `${firstName.charAt(0)}${lastName.charAt(0)}`;
     
         const savedReview = await reviewsModel.create(reviewData);
     

@@ -37,7 +37,9 @@ const otherDbConnection = mongoose_1.default.createConnection(dbUrlTwo, {
     useUnifiedTopology: true,
 });
 const reviewsSchema = new mongoose_1.Schema({
-    reviewerName: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    initials: { type: String, required: false },
     email: { type: String, required: true },
     reviewTitle: { type: String, required: true },
     reviewMessage: { type: String, required: true },

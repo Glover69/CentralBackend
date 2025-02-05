@@ -26,16 +26,19 @@ exports.getReviews = getReviews;
 // Create a new review
 const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { ratingValue, reviewMessage, reviewTitle, reviewerName, email, profileImage, productId } = req.body;
+        const { ratingValue, reviewMessage, reviewTitle, firstName, lastName, initials, email, profileImage, productId } = req.body;
         const reviewData = {
             ratingValue,
             reviewMessage,
             reviewTitle,
-            reviewerName,
+            firstName,
+            lastName,
+            initials,
             email,
             profileImage,
             productId,
         };
+        reviewData.initials = `${firstName.charAt(0)}${lastName.charAt(0)}`;
         const savedReview = yield reviews_models_1.reviewsModel.create(reviewData);
         if (savedReview) {
             res.status(201).json({

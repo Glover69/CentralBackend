@@ -33,7 +33,9 @@ interface reviews extends Document {
     ratingValue: number;
     reviewMessage : string;
     reviewTitle : string;
-    reviewerName : string;
+    firstName : string;
+    lastName: string;
+    initials?: string;
     email: string;
     dateCreated: Date;
     profileImage: string;
@@ -44,7 +46,9 @@ interface reviews extends Document {
 
 
 const reviewsSchema = new Schema<reviews>({
-  reviewerName: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  initials: { type: String, required: false },
   email: { type: String, required: true },
   reviewTitle: { type: String, required: true },
   reviewMessage: { type: String, required: true },
