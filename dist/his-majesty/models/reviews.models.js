@@ -38,6 +38,7 @@ const otherDbConnection = mongoose_1.default.createConnection(dbUrlTwo, {
 });
 const reviewsSchema = new mongoose_1.Schema({
     reviewerName: { type: String, required: true },
+    email: { type: String, required: true },
     reviewTitle: { type: String, required: true },
     reviewMessage: { type: String, required: true },
     ratingValue: { type: Number, required: true },

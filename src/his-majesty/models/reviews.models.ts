@@ -34,6 +34,7 @@ interface reviews extends Document {
     reviewMessage : string;
     reviewTitle : string;
     reviewerName : string;
+    email: string;
     dateCreated: Date;
     profileImage: string;
     productId?: string; // Optional field to store the product ID when reviewType is 'Products'
@@ -44,6 +45,7 @@ interface reviews extends Document {
 
 const reviewsSchema = new Schema<reviews>({
   reviewerName: { type: String, required: true },
+  email: { type: String, required: true },
   reviewTitle: { type: String, required: true },
   reviewMessage: { type: String, required: true },
   ratingValue: { type: Number, required: true },

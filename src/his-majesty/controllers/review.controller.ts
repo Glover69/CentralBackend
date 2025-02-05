@@ -20,6 +20,7 @@ export const createReview = async (req: Request, res: Response) => {
           reviewMessage,
           reviewTitle,
           reviewerName,
+          email,
           profileImage,
           productId
         } = req.body;
@@ -30,6 +31,7 @@ export const createReview = async (req: Request, res: Response) => {
           reviewMessage,
           reviewTitle,
           reviewerName,
+          email,
           profileImage,
           productId,
         };

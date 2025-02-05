@@ -26,12 +26,13 @@ exports.getReviews = getReviews;
 // Create a new review
 const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { ratingValue, reviewMessage, reviewTitle, reviewerName, profileImage, productId } = req.body;
+        const { ratingValue, reviewMessage, reviewTitle, reviewerName, email, profileImage, productId } = req.body;
         const reviewData = {
             ratingValue,
             reviewMessage,
             reviewTitle,
             reviewerName,
+            email,
             profileImage,
             productId,
         };
