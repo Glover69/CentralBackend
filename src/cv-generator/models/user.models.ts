@@ -9,11 +9,16 @@ interface User extends Document {
   profilePhoto: string;
   verified: boolean;
   phoneNumber: string;
+  files: Files[];
 }
 
 interface Email{
   email: string;
   verified: boolean;
+}
+
+interface Files{
+  
 }
 
 const EmailSchema = new Schema<Email>({

@@ -6,6 +6,7 @@ import { profileGeneratorRoutes } from "./AI/profileGenerator";
 import { connectDB } from "./database";
 import { collectionRoutes } from "./cv-generator/routes/collection.routes";
 import authRoutes from "./cv-generator/routes/auth.routes";
+import reviewRoutes from "./his-majesty/routes/review.routes";
 
 dotenv.config();
 
@@ -38,4 +39,5 @@ app.use('/api/cv-generator', CVGeneratorRoutes);
 app.use('/api/ai', profileGeneratorRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api/collections', collectionRoutes);
+app.use("/api/his-majesty/reviews", reviewRoutes);
 
