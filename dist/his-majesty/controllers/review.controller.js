@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteReview = exports.updateReview = exports.createReview = exports.getReviews = void 0;
+exports.deleteReview = exports.updateReview = exports.createReview = exports.getReviewsByProductId = exports.getReviews = void 0;
 const reviews_models_1 = require("../models/reviews.models");
 // Get all reviews
 const getReviews = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,6 +23,18 @@ const getReviews = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getReviews = getReviews;
+const getReviewsByProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { productId } = req.params;
+        const reviewData = yield reviews_models_1.reviewsModel.find({ productId });
+        res.status(200).send(reviewData);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(400).send(error);
+    }
+});
+exports.getReviewsByProductId = getReviewsByProductId;
 // Create a new review
 const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

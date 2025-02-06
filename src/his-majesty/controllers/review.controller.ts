@@ -12,6 +12,17 @@ export const getReviews = async(req: Request, res: Response) => {
       }
 };
 
+export const getReviewsByProductId = async (req: Request, res: Response) => {
+    try {
+        const { productId } = req.params;
+        const reviewData = await reviewsModel.find({ productId });
+        res.status(200).send(reviewData);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send(error);
+    }
+};
+
 // Create a new review
 export const createReview = async (req: Request, res: Response) => {
     try {
@@ -26,6 +37,7 @@ export const createReview = async (req: Request, res: Response) => {
           profileImage,
           productId
         } = req.body;
+        
     
     
         const reviewData = {
