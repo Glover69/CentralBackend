@@ -80,6 +80,10 @@ router.post("/signup", async (req, res) => {
     // Send OTP verification code
     await sendOTPVerificationCode(otpRequest);
 
+    res.status(201).json({
+      message: "User registered successfully. Verification Code sent.",
+      user: { email: savedUser.email, customerID: savedUser.customerID },
+    });
     // // Generate JWT
     // const token = jwt.sign({ id: userData.customerID }, SECRET_KEY, {
     //   expiresIn: "1h",

@@ -38,7 +38,15 @@ exports.getReviewsByProductId = getReviewsByProductId;
 // Create a new review
 const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { ratingValue, reviewMessage, reviewTitle, firstName, lastName, initials, email, profileImage, productId } = req.body;
+        const { ratingValue, reviewMessage, reviewTitle, firstName, lastName, initials, email, profileImage, productId, } = req.body;
+        // Validate firstName and lastName before using them
+        if (typeof firstName !== "string" || typeof lastName !== "string") {
+            return res
+                .status(400)
+                .json({
+                message: "First name and last name are required and must be strings.",
+            });
+        }
         const reviewData = {
             ratingValue,
             reviewMessage,
@@ -50,7 +58,7 @@ const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             profileImage,
             productId,
         };
-        reviewData.initials = `${firstName.charAt(0)}${lastName.charAt(0)}`;
+        reviewData.initials = `${firstName.charAt(0) || ''}${lastName.charAt(0) || ''}`;
         const savedReview = yield reviews_models_1.reviewsModel.create(reviewData);
         if (savedReview) {
             res.status(201).json({
