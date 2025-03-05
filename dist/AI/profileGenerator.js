@@ -32,7 +32,7 @@ router.post('/generate-content', (req, res) => __awaiter(void 0, void 0, void 0,
             return res.status(400).send('Prompt is required');
         }
         // For text-only input, use the gemini-pro model
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-001" });
         const result = yield model.generateContent(prompt);
         const response = yield result.response;
         const text = yield response.text();
