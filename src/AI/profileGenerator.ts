@@ -19,7 +19,13 @@ const genAI = new GoogleGenerativeAI(apiKey);
 router.post('/generate-content', async (req, res) => {
     try {
 
-       const prompt = req.body.prompt;
+      let prompt = ''
+
+      if(req.body.application === 'skeleton-loader'){
+        prompt = req.body.prompt + 'generate a skeleton loader with this(using tailwind and making them animate-pulse). It should follow the same structure as the block of code given. No explanations. Just code.';
+      }else{
+        prompt = req.body.prompt;
+      }
 
        if (!prompt) {
         return res.status(400).send('Prompt is required');
