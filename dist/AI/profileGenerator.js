@@ -30,6 +30,10 @@ router.post('/generate-content', (req, res) => __awaiter(void 0, void 0, void 0,
         let prompt = '';
         if (req.body.application === 'skeleton-loader') {
             prompt = req.body.prompt + 'generate a skeleton loader with this(using tailwind and making them animate-pulse). It should follow the same structure as the block of code given. No explanations. Just code.';
+            if (req.body.framework === "Angular") {
+                const rules = "Additional rules to note. If there are any blocks of code that are commented, take them out. If there are any stuff like formgroups, onclick functions, and the likes, take them out. All containers should be divs.";
+                prompt = prompt + rules;
+            }
         }
         else {
             prompt = req.body.prompt;
@@ -37,6 +41,7 @@ router.post('/generate-content', (req, res) => __awaiter(void 0, void 0, void 0,
         if (!prompt) {
             return res.status(400).send('Prompt is required');
         }
+        console.log("Prompt: ", prompt);
         // For text-only input, use the gemini-pro model
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-001" });
         const result = yield model.generateContent(prompt);
