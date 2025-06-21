@@ -44,6 +44,8 @@ const profileGenerator_1 = require("./AI/profileGenerator");
 const database_1 = require("./database");
 const collection_routes_1 = require("./cv-generator/routes/collection.routes");
 const auth_routes_1 = __importDefault(require("./cv-generator/routes/auth.routes"));
+const auth_autostat_routes_1 = __importDefault(require("./autostat-web/routes/auth-autostat.routes"));
+const match_process_routes_1 = __importDefault(require("./autostat-web/routes/match-process.routes"));
 const review_routes_1 = __importDefault(require("./his-majesty/routes/review.routes"));
 const socket_io_1 = require("socket.io"); // Import SocketIOServer
 const server_1 = require("./typing-test/socket/server");
@@ -108,3 +110,5 @@ app.use('/api/ai', profileGenerator_1.profileGeneratorRoutes);
 app.use('/api/auth', auth_routes_1.default);
 app.use('/api/collections', collection_routes_1.collectionRoutes);
 app.use("/api/his-majesty/reviews", review_routes_1.default);
+app.use("/api/autostat-web/auth", auth_autostat_routes_1.default);
+app.use("/api/autostat-web/match-processes", match_process_routes_1.default);

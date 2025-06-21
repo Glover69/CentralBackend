@@ -7,6 +7,9 @@ import { profileGeneratorRoutes } from "./AI/profileGenerator";
 import { connectDB } from "./database";
 import { collectionRoutes } from "./cv-generator/routes/collection.routes";
 import authRoutes from "./cv-generator/routes/auth.routes";
+import authautostatRoutes from "./autostat-web/routes/auth-autostat.routes";
+import matchprocessesRoutes from "./autostat-web/routes/match-process.routes";
+
 import reviewRoutes from "./his-majesty/routes/review.routes";
 import { Socket, Server as SocketIOServer } from "socket.io"; // Import SocketIOServer
 import { initializeTypingTestSocket } from "./typing-test/socket/server";
@@ -82,5 +85,8 @@ app.use('/api/ai', profileGeneratorRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api/collections', collectionRoutes);
 app.use("/api/his-majesty/reviews", reviewRoutes);
+app.use("/api/autostat-web/auth", authautostatRoutes);
+app.use("/api/autostat-web/match-processes", matchprocessesRoutes);
+
 
 
