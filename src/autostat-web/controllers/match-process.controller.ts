@@ -102,7 +102,7 @@ export const addMatchProcess = [conditionalAuth, async (req: Request, res: Respo
 
     // Basic validation can be handled by Mongoose schema 'required' fields.
     // This check is still good as a first line of defense.
-    if (!matchData.match || !matchData.match.title || !matchData.match.stats || !matchData.match.videoURL) {
+    if (!matchData.match || !matchData.match.title || !matchData.match.videoURL) {
         res.status(400).json({ message: "Missing required match process fields." });
         return;
     }
@@ -115,6 +115,8 @@ export const addMatchProcess = [conditionalAuth, async (req: Request, res: Respo
         // Add the generated id and date to the match data object
         matchData.match.id = matchID;
         matchData.match.date = currentDate;
+        matchData.match.isProcessed = false; // Default to false when adding a new match process
+        matchData.match.stats = matchData.match.stats || {}; // Ensure stats is an object, even if empty
 
         // It's good practice to check if a resource with this unique ID already exists
         const existingMatch = await MatchStatsModel.findOne({ id: matchData.match.id });
