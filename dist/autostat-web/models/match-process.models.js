@@ -23,6 +23,10 @@ const FullMatchStatsSchema = new mongoose_1.Schema({
         teamA: { type: Number, required: false },
         teamB: { type: Number, required: false }
     },
+    goals: {
+        teamA: { type: Number, required: false },
+        teamB: { type: Number, required: false }
+    },
     shots: {
         teamA: { type: Number, required: false },
         teamB: { type: Number, required: false }

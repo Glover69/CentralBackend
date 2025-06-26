@@ -22,6 +22,7 @@ interface TeamStats {
 // Interface for the full stats block
 interface FullMatchStats {
     possession: { teamA: number; teamB: number };
+    goals: { teamA: number; teamB: number };
     shots: { teamA: number; teamB: number };
     passes: { teamA: number; teamB: number };
     tackles: { teamA: number; teamB: number };
@@ -116,6 +117,10 @@ const TeamStatsSchema = new Schema({
 
 const FullMatchStatsSchema = new Schema({
     possession: {
+        teamA: { type: Number, required: false },
+        teamB: { type: Number, required: false }
+    },
+     goals: {
         teamA: { type: Number, required: false },
         teamB: { type: Number, required: false }
     },
