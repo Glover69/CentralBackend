@@ -14,6 +14,7 @@ import reviewRoutes from "./his-majesty/routes/review.routes";
 import { Socket, Server as SocketIOServer } from "socket.io"; // Import SocketIOServer
 import { initializeTypingTestSocket } from "./typing-test/socket/server";
 import { connectRedis } from "./redis-database";
+import downloadRoutes from "./cv-generator/routes/download.routes";
 
 dotenv.config();
 
@@ -81,6 +82,7 @@ async function startServer() {
 startServer();
 
 app.use('/api/cv-generator', CVGeneratorRoutes);
+app.use('/api/cv-gen/download', downloadRoutes);
 app.use('/api/ai', profileGeneratorRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api/collections', collectionRoutes);

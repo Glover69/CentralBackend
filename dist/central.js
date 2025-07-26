@@ -51,6 +51,7 @@ const review_routes_1 = __importDefault(require("./his-majesty/routes/review.rou
 const socket_io_1 = require("socket.io"); // Import SocketIOServer
 const server_1 = require("./typing-test/socket/server");
 const redis_database_1 = require("./redis-database");
+const download_routes_1 = __importDefault(require("./cv-generator/routes/download.routes"));
 dotenv.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
@@ -107,6 +108,7 @@ function startServer() {
 // --- Start the Server ---
 startServer();
 app.use('/api/cv-generator', CV_GeneratorRoutes_1.CVGeneratorRoutes);
+app.use('/api/cv-gen/download', download_routes_1.default);
 app.use('/api/ai', profileGenerator_1.profileGeneratorRoutes);
 app.use('/api/auth', auth_routes_1.default);
 app.use('/api/collections', collection_routes_1.collectionRoutes);
