@@ -6,6 +6,8 @@ export type Player = {
 //   progress: number;
   isReady: boolean;
   cursorIndex: number; // Added cursorIndex to track the player's cursor position
+  accuracy: number,
+  wpm: number,
   correctCharacters: number; // Added correctCharacters to track the number of correctly typed characters
   totalTypedCharacters: number; // Added totalTypedCharacters to track the total number of characters typed
   lastUpdate: number; // Added lastUpdate to track the last time the player updated their progress

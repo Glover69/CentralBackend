@@ -64,7 +64,7 @@ const initializeTypingTestSocket = (io) => {
                 if (lobby.players.find(p => p.name === data.playerName)) {
                     return socket.emit("lobbyError", "Player name already taken in this lobby.");
                 }
-                lobby.players.push({ id: socket.id, name: data.playerName, isReady: false, cursorIndex: 0, correctCharacters: 0, totalTypedCharacters: 0, lastUpdate: Date.now() });
+                lobby.players.push({ id: socket.id, name: data.playerName, isReady: false, cursorIndex: 0, accuracy: 0, wpm: 0, correctCharacters: 0, totalTypedCharacters: 0, lastUpdate: Date.now() });
                 yield lobby.save();
                 socket.join(data.code);
                 console.log(`\n[JOIN LOBBY] Socket ${socket.id} successfully executed socket.join("${data.code}")\n`);
@@ -335,7 +335,7 @@ const initializeTypingTestSocket = (io) => {
                 const playerIndex = lobby.players.findIndex((p) => p.id === data.id); // data.id is the player's socket ID
                 if (playerIndex !== -1) {
                     // Player found, update their details
-                    lobby.players[playerIndex] = Object.assign(Object.assign({}, lobby.players[playerIndex]), { id: data.id, name: lobby.players[playerIndex].name || data.playerName, cursorIndex: data.cursorIndex, correctCharacters: data.correctCharacters, totalTypedCharacters: data.totalTypedCharacters, lastUpdate: Date.now() });
+                    lobby.players[playerIndex] = Object.assign(Object.assign({}, lobby.players[playerIndex]), { id: data.id, name: lobby.players[playerIndex].name || data.playerName, cursorIndex: data.cursorIndex, accuracy: data.accuracy, wpm: data.wpm, correctCharacters: data.correctCharacters, totalTypedCharacters: data.totalTypedCharacters, lastUpdate: Date.now() });
                     yield redis_database_1.redisClient.set(key, JSON.stringify(lobby));
                     console.log(`\n[updateProgress] Updated player ${data.id} in lobby ${data.code}\n`);
                     // Optional: Emit an immediate progress update if desired for more real-time feedback
@@ -460,16 +460,16 @@ const initializeTypingTestSocket = (io) => {
                 // Compute leaderboard
                 const leaderboard = lobby.players.map((player) => {
                     // Ensure elapsedSecondsForWPM is at least a very small number to avoid div by zero if game just started
-                    const elapsedSecondsForWPM = Math.max(elapsed, 1); // Use at least 1 second for WPM calc
-                    const timeMins = elapsedSecondsForWPM / 60;
-                    const wpm = Math.round((player.correctCharacters / 5) / timeMins);
-                    const accuracy = player.totalTypedCharacters > 0 ? Math.round((player.correctCharacters / player.totalTypedCharacters) * 100) : 0;
+                    // const elapsedSecondsForWPM = Math.max(elapsed, 1); // Use at least 1 second for WPM calc
+                    // const timeMins = elapsedSecondsForWPM / 60;
+                    // const wpm = Math.round((player.correctCharacters / 5) / timeMins);
+                    // const accuracy = player.totalTypedCharacters > 0 ? Math.round((player.correctCharacters / player.totalTypedCharacters) * 100) : 0;
                     return {
                         id: player.id, // Use 'id' consistently
                         name: player.name, // Use 'name' consistently
                         cursorIndex: player.cursorIndex,
-                        wpm,
-                        accuracy,
+                        accuracy: player.accuracy,
+                        wpm: player.wpm,
                     };
                 });
                 // Sort leaderboard

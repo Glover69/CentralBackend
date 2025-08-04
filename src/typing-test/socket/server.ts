@@ -67,7 +67,7 @@ export const initializeTypingTestSocket = (io: SocketIOServer) => {
         }
 
 
-        lobby.players.push({ id: socket.id, name: data.playerName, isReady: false, cursorIndex: 0, correctCharacters: 0, totalTypedCharacters: 0, lastUpdate: Date.now() });
+        lobby.players.push({ id: socket.id, name: data.playerName, isReady: false, cursorIndex: 0, accuracy: 0, wpm: 0, correctCharacters: 0, totalTypedCharacters: 0, lastUpdate: Date.now() });
         await lobby.save();
 
         socket.join(data.code);
@@ -345,7 +345,7 @@ export const initializeTypingTestSocket = (io: SocketIOServer) => {
     });
 
     // Update player progress
-    socket.on("updateProgress", async (data: { code: string; id: string, playerName: string, cursorIndex: number, correctCharacters: number, totalTypedCharacters: number }) => {
+    socket.on("updateProgress", async (data: { code: string; id: string, playerName: string, cursorIndex: number, accuracy: number, wpm: number, correctCharacters: number, totalTypedCharacters: number }) => {
       try {
         const key = `lobby:${data.code}`;
         const lobbyData = await redisClient.get(key);
@@ -378,6 +378,8 @@ export const initializeTypingTestSocket = (io: SocketIOServer) => {
               id: data.id, // Ensure id is present
               name: lobby.players[playerIndex].name || data.playerName, // Prefer existing name
               cursorIndex: data.cursorIndex,
+              accuracy: data.accuracy,
+              wpm: data.wpm,
               correctCharacters: data.correctCharacters,
               totalTypedCharacters: data.totalTypedCharacters,
               lastUpdate: Date.now()
@@ -526,18 +528,18 @@ function startGameLoop(code: string) {
       // Compute leaderboard
       const leaderboard = lobby.players.map((player: Player) => { // Use Player type
         // Ensure elapsedSecondsForWPM is at least a very small number to avoid div by zero if game just started
-        const elapsedSecondsForWPM = Math.max(elapsed, 1); // Use at least 1 second for WPM calc
-        const timeMins = elapsedSecondsForWPM / 60;
+        // const elapsedSecondsForWPM = Math.max(elapsed, 1); // Use at least 1 second for WPM calc
+        // const timeMins = elapsedSecondsForWPM / 60;
         
-        const wpm = Math.round((player.correctCharacters / 5) / timeMins);
-        const accuracy = player.totalTypedCharacters > 0 ? Math.round((player.correctCharacters / player.totalTypedCharacters) * 100) : 0;
+        // const wpm = Math.round((player.correctCharacters / 5) / timeMins);
+        // const accuracy = player.totalTypedCharacters > 0 ? Math.round((player.correctCharacters / player.totalTypedCharacters) * 100) : 0;
   
         return {
           id: player.id, // Use 'id' consistently
           name: player.name, // Use 'name' consistently
           cursorIndex: player.cursorIndex,
-          wpm,
-          accuracy,
+          accuracy: player.accuracy,
+          wpm: player.wpm,
         };
       });
   
