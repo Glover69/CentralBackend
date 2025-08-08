@@ -1,29 +1,38 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import * as dotenv from "dotenv";
 import http from "http"; 
 import cors from "cors";
-import { CVGeneratorRoutes } from "./cv-generator/routes/CV-GeneratorRoutes";
-import { profileGeneratorRoutes } from "./AI/profileGenerator";
-import { connectDB } from "./database";
-import { collectionRoutes } from "./cv-generator/routes/collection.routes";
-import authRoutes from "./cv-generator/routes/auth.routes";
-import authautostatRoutes from "./autostat-web/routes/auth-autostat.routes";
-import matchprocessesRoutes from "./autostat-web/routes/match-process.routes";
-import autostatutilsroutes from "./autostat-web/routes/autostat-utils.routes";
-import reviewRoutes from "./his-majesty/routes/review.routes";
-import { Socket, Server as SocketIOServer } from "socket.io"; // Import SocketIOServer
+import { connectMultipleDatabases } from "./database";
+import { Server as SocketIOServer } from "socket.io"; 
 import { initializeTypingTestSocket } from "./typing-test/socket/server";
 import { connectRedis } from "./redis-database";
-import downloadRoutes from "./cv-generator/routes/download.routes";
+import { setupRoutes } from "./routes-index";
+import cookieParser from 'cookie-parser';
+import { authCallback } from "./schedulr/controllers/google-auth.controller";
+
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
+
 // Middleware to parse JSON bodies
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-const allowedOrigins = ['http://localhost:4200', 'https://auto-stat-web-platform.vercel.app', 'https://typing-test-game-two.vercel.app', 'https://light-frank-crayfish.ngrok-free.app', 'http://localhost:6969', 'http://localhost:3000', 'https://mpampacereals.com', 'https://www.mpampacereals.com', 'https://data-collection-nine.vercel.app', 'http://localhost:8000', 'https://cv-gen-six.vercel.app'];
+
+// 1) Callback route first, with relaxed CORS (or none)
+export const callbackCors = cors({
+  origin: (origin, cb) => {
+    // Allow top-level POSTs from Google and cases where Origin is 'null'
+    if (!origin || origin === 'null' || origin === 'https://accounts.google.com') return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+});
+
+const allowedOrigins = ['http://localhost:4200', 'null', 'https://accounts.google.com', 'https://auto-stat-web-platform.vercel.app', 'https://typing-test-game-two.vercel.app', 'https://light-frank-crayfish.ngrok-free.app', 'http://localhost:6969', 'http://localhost:3000', 'https://mpampacereals.com', 'https://www.mpampacereals.com', 'https://data-collection-nine.vercel.app', 'http://localhost:8000', 'https://cv-gen-six.vercel.app'];
 
 // Use CORS middleware with specific origins
 app.use(cors({
@@ -34,7 +43,9 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
+  credentials: true
 }));
+
 
 const httpServer = http.createServer(app);
 
@@ -50,46 +61,36 @@ const io = new SocketIOServer(httpServer, {
 
 initializeTypingTestSocket(io);
 
-// // Connect to MongoDB
-// connectDB();
-// connectRedis()
-
-// httpServer.listen(port, () => {
-//   console.log(`[server]: Server is running at http://localhost:${port}`);
-//   console.log(`[socket.io]: Socket.IO server is listening on path /socket/`);
-// });
-
 // --- Main Application Start Function ---
 async function startServer() {
   try {
-    // Connect to MongoDB
-    await connectDB(); // Assuming connectDB is also async and you want to await it
+    // Connect to All MongoDB databases
+    await connectMultipleDatabases();
 
     // Connect to Redis
     await connectRedis();
+
+    // Set up all routes after db connections are ready
+    await setupRoutes(app)
 
     httpServer.listen(port, () => {
       console.log(`[server]: Server is running at http://localhost:${port}`);
       console.log(`[socket.io]: Socket.IO server is listening on path /socket/`);
     });
+
+    
   } catch (error) {
     console.error("Failed to start the server:", error);
-    process.exit(1); // Exit if essential services fail to connect
+    process.exit(1);
   }
 }
+
 
 // --- Start the Server ---
 startServer();
 
-app.use('/api/cv-generator', CVGeneratorRoutes);
-app.use('/api/cv-gen/download', downloadRoutes);
-app.use('/api/ai', profileGeneratorRoutes)
-app.use('/api/auth', authRoutes);
-app.use('/api/collections', collectionRoutes);
-app.use("/api/his-majesty/reviews", reviewRoutes);
-app.use("/api/autostat-web/auth", authautostatRoutes);
-app.use("/api/autostat-web/match-processes", matchprocessesRoutes);
-app.use("/api/autostat-web/utils", autostatutilsroutes);
+
+
 
 
 
