@@ -6,22 +6,21 @@ export const getUserSchedules = [requireAuth, async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { id } = req.query;
-
-  if (!id) {
-    res.status(404).send(`Failed to find user with id ${id}`);
-    return;
-  }
+  const uid = req.user?.uid; // set by requireAuth from the cookie session
+  if (!uid) { 
+    res.status(401).json({ error: 'Unauthorized' });
+    return 
+  };
 
   try {
-    const userData = await SchedulrUserModel.findOne({ id: id });
+    const userData = await SchedulrUserModel.findOne({ id: uid }).lean();
 
     if (!userData) {
-      res.status(404).send(`Failed to find any data for the user with id ${id}.`);
+      res.status(400).send(`Failed to find any data for the user with id ${uid}.`);
       return;
-    } else {
-      res.status(200).send(userData);
     }
+
+    res.status(200).send({schedules: userData.schedules ?? [] });
   } catch (error) {
     console.error("Get user data error:", error);
     res

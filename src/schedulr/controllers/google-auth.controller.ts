@@ -77,7 +77,7 @@ export const authCallback = async (
     // Issue your app session JWT (cookie)
     const appJwt = jwt.sign(
       {
-        id: userDoc.id,
+        uid: userDoc.id,
         email: userDoc.email,
         name: userDoc.name,
         picture: userDoc.picture,

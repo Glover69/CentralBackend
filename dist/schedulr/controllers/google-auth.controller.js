@@ -61,7 +61,7 @@ const authCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         }, { upsert: true, new: true, setDefaultsOnInsert: true });
         // Issue your app session JWT (cookie)
         const appJwt = jsonwebtoken_1.default.sign({
-            id: userDoc.id,
+            uid: userDoc.id,
             email: userDoc.email,
             name: userDoc.name,
             picture: userDoc.picture,

@@ -12,7 +12,7 @@ function requireAuth(req, res, next) {
         return res.status(401).json({ error: 'Unauthorized' });
     try {
         const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET_SCHEDULR);
-        req.user = { id: payload.id, email: payload.email, name: payload.name, picture: payload.picture };
+        req.user = { uid: payload.uid, email: payload.email, name: payload.name, picture: payload.picture };
         next();
     }
     catch (_b) {

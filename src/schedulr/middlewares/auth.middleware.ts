@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 
 export interface AuthUser {
-  id: string;
+  uid: string;
   email: string;
   name?: string;
   picture?: string;
@@ -23,7 +23,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET_SCHEDULR!) as AuthUser & { exp: number; iat: number };
-    req.user = { id: payload.id, email: payload.email, name: payload.name, picture: payload.picture };
+    req.user = { uid: payload.uid, email: payload.email, name: payload.name, picture: payload.picture };
     next();
   } catch {
     res.status(401).json({ error: 'Invalid session' });
