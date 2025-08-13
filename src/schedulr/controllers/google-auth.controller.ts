@@ -27,7 +27,7 @@ export const authCallback = async (
     if (!credential) {
       res.redirect(
         `${
-          process.env.FRONTEND_URL || "http://localhost:4200"
+          process.env.SCHEDULR_DEV_URL || "http://localhost:4200"
         }/auth-callback?error=missing_credential`
       );
       return;
@@ -37,7 +37,7 @@ export const authCallback = async (
     if (!g_csrf_token || !csrfCookie || g_csrf_token !== csrfCookie) {
       res.redirect(
         `${
-          process.env.FRONTEND_URL || "http://localhost:4200"
+          process.env.SCHEDULR_DEV_URL || "http://localhost:4200"
         }/auth-callback?error=csrf`
       );
       return;
@@ -54,7 +54,7 @@ export const authCallback = async (
     if (!payload || !payload.sub || !payload.email) {
       res.redirect(
         `${
-          process.env.FRONTEND_URL || "http://localhost:4200"
+          process.env.SCHEDULR_DEV_URL || "http://localhost:4200"
         }/auth-callback?error=invalid_token`
       );
       return;
@@ -95,12 +95,12 @@ export const authCallback = async (
     });
 
     // Redirect back to SPA (no PII in URL)
-    res.redirect(`${process.env.FRONTEND_URL || "http://localhost:4200"}/home`);
+    res.redirect(`${process.env.SCHEDULR_DEV_URL || "http://localhost:4200"}/home`);
   } catch (err: any) {
     console.error("Auth callback error:", err);
     res.redirect(
       `${
-        process.env.FRONTEND_URL || "http://localhost:4200"
+        process.env.SCHEDULR_DEV_URL || "http://localhost:4200"
       }/auth-callback?error=auth_failed`
     );
   }

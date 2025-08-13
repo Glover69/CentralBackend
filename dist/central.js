@@ -63,7 +63,7 @@ exports.callbackCors = (0, cors_1.default)({
     },
     credentials: true,
 });
-const allowedOrigins = ['http://localhost:4200', 'null', 'https://accounts.google.com', 'https://auto-stat-web-platform.vercel.app', 'https://typing-test-game-two.vercel.app', 'https://light-frank-crayfish.ngrok-free.app', 'http://localhost:6969', 'http://localhost:3000', 'https://mpampacereals.com', 'https://www.mpampacereals.com', 'https://data-collection-nine.vercel.app', 'http://localhost:8000', 'https://cv-gen-six.vercel.app'];
+const allowedOrigins = ['https://schedulr-omega.vercel.app', 'https://schedulr-git-dev-daniel-glovers-projects.vercel.app', 'http://localhost:4200', 'null', 'https://accounts.google.com', 'https://auto-stat-web-platform.vercel.app', 'https://typing-test-game-two.vercel.app', 'https://light-frank-crayfish.ngrok-free.app', 'http://localhost:6969', 'http://localhost:3000', 'https://mpampacereals.com', 'https://www.mpampacereals.com', 'https://data-collection-nine.vercel.app', 'http://localhost:8000', 'https://cv-gen-six.vercel.app'];
 // Use CORS middleware with specific origins
 app.use((0, cors_1.default)({
     origin: function (origin, callback) {

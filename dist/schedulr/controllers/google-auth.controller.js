@@ -32,12 +32,12 @@ const authCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const csrfCookie = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.g_csrf_token;
         console.log("🎫 Credential received:", !!credential);
         if (!credential) {
-            res.redirect(`${process.env.FRONTEND_URL || "http://localhost:4200"}/auth-callback?error=missing_credential`);
+            res.redirect(`${process.env.SCHEDULR_DEV_URL || "http://localhost:4200"}/auth-callback?error=missing_credential`);
             return;
         }
         // CSRF check
         if (!g_csrf_token || !csrfCookie || g_csrf_token !== csrfCookie) {
-            res.redirect(`${process.env.FRONTEND_URL || "http://localhost:4200"}/auth-callback?error=csrf`);
+            res.redirect(`${process.env.SCHEDULR_DEV_URL || "http://localhost:4200"}/auth-callback?error=csrf`);
             return;
         }
         // Verify ID token with Google
@@ -47,7 +47,7 @@ const authCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
         const payload = ticket.getPayload();
         if (!payload || !payload.sub || !payload.email) {
-            res.redirect(`${process.env.FRONTEND_URL || "http://localhost:4200"}/auth-callback?error=invalid_token`);
+            res.redirect(`${process.env.SCHEDULR_DEV_URL || "http://localhost:4200"}/auth-callback?error=invalid_token`);
             return;
         }
         // Upsert user (if user doesn't exist in db, add. Or else, just update)
@@ -74,11 +74,11 @@ const authCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             path: "/",
         });
         // Redirect back to SPA (no PII in URL)
-        res.redirect(`${process.env.FRONTEND_URL || "http://localhost:4200"}/home`);
+        res.redirect(`${process.env.SCHEDULR_DEV_URL || "http://localhost:4200"}/home`);
     }
     catch (err) {
         console.error("Auth callback error:", err);
-        res.redirect(`${process.env.FRONTEND_URL || "http://localhost:4200"}/auth-callback?error=auth_failed`);
+        res.redirect(`${process.env.SCHEDULR_DEV_URL || "http://localhost:4200"}/auth-callback?error=auth_failed`);
     }
 });
 exports.authCallback = authCallback;
