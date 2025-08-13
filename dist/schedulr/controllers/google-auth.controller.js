@@ -27,6 +27,7 @@ const authCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     console.log("📝 Request body:", req.body);
     console.log("📝 Request query:", req.query);
     console.log("📝 Request headers:", req.headers);
+    console.log("📝 Request cookies:", req.cookies);
     try {
         const { credential, g_csrf_token } = req.body || {};
         const csrfCookie = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.g_csrf_token;

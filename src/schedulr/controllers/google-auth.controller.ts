@@ -18,6 +18,7 @@ export const authCallback = async (
   console.log("📝 Request body:", req.body);
   console.log("📝 Request query:", req.query);
   console.log("📝 Request headers:", req.headers);
+  console.log("📝 Request cookies:", req.cookies)
 
   try {
     const { credential, g_csrf_token } = req.body || {};
