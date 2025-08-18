@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createSchedule = exports.getUserSchedules = void 0;
 const user_models_1 = require("../models/user.models");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
+const uuid_1 = require("uuid");
 exports.getUserSchedules = [auth_middleware_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var _a, _b;
         const uid = (_a = req.user) === null || _a === void 0 ? void 0 : _a.uid; // set by requireAuth from the cookie session
@@ -40,8 +41,8 @@ exports.getUserSchedules = [auth_middleware_1.requireAuth, (req, res) => __await
     })];
 exports.createSchedule = [auth_middleware_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.query;
-        const { semester, classes, schedule_id, created_at } = req.body;
-        if (!semester || !classes || !schedule_id || !created_at) {
+        const { semester, classes } = req.body;
+        if (!semester || !classes) {
             res.status(400).send("Missing required fields from payload");
             return;
         }
@@ -55,10 +56,10 @@ exports.createSchedule = [auth_middleware_1.requireAuth, (req, res) => __awaiter
                 return;
             }
             const schedule = {
-                semester: semester,
-                classes: classes,
-                schedule_id: schedule_id,
-                created_at: created_at
+                semester,
+                classes,
+                schedule_id: `sch-${(0, uuid_1.v4)()}`,
+                created_at: new Date()
             };
             user.schedules.push(schedule);
             yield user.save();

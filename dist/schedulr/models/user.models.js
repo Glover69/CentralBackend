@@ -8,10 +8,10 @@ const DaysSchema = new mongoose_1.Schema({
     day: { type: String, required: true },
     start_time: { type: String, required: true },
     end_time: { type: String, required: true },
-    room: { type: String, required: true }
+    room: { type: String, required: false }
 });
 const SemesterSchema = new mongoose_1.Schema({
-    semester_id: { type: String, required: true },
+    // semester_id: { type: String, required: true },
     schedule_name: { type: String, required: true },
     start_date: { type: String, required: true },
     end_date: { type: String, required: true },
@@ -26,8 +26,8 @@ const ClassSchema = new mongoose_1.Schema({
 const ScheduleSchema = new mongoose_1.Schema({
     semester: SemesterSchema,
     classes: [ClassSchema],
-    schedule_id: { type: Number, required: true },
-    created_at: { type: Date, required: true },
+    schedule_id: { type: String, required: true },
+    created_at: { type: Date, default: Date.now() },
     file_link: { type: String, required: false }
 });
 const UserSchema = new mongoose_1.Schema({

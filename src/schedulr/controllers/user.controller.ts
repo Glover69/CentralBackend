@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Schedule, SchedulrUserModel } from "../models/user.models";
 import { requireAuth } from "../middlewares/auth.middleware";
+import { v4 as uuidv4 } from "uuid";
 
 export const getUserSchedules = [requireAuth, async (
   req: Request,
@@ -35,9 +36,9 @@ export const getUserSchedules = [requireAuth, async (
 
 export const createSchedule = [requireAuth, async (req: Request, res: Response): Promise<void> => {
     const { id } = req.query
-    const { semester, classes, schedule_id, created_at }: Partial<Schedule> = req.body
+    const { semester, classes}: Partial<Schedule> = req.body
 
-    if( !semester || !classes || !schedule_id || !created_at ){
+    if( !semester || !classes ){
         res.status(400).send("Missing required fields from payload")
         return
     }
@@ -54,11 +55,11 @@ export const createSchedule = [requireAuth, async (req: Request, res: Response):
             return;
         } 
         
-        const schedule = {
-            semester: semester,
-            classes: classes,
-            schedule_id: schedule_id,
-            created_at: created_at
+        const schedule: Schedule = {
+          semester,
+          classes,
+          schedule_id: `sch-${uuidv4()}`,
+          created_at: new Date()
         }
 
         user.schedules.push(schedule);
