@@ -14,7 +14,7 @@ interface User extends Document {
 export type Schedule = {
   semester: semester;
   classes: Class[];
-  schedule_id: number;
+  schedule_id: string;
   created_at: Date
   file_link?: string
 }
@@ -27,7 +27,7 @@ export type Class = {
 }
 
 export type semester = {
-  semester_id: string; // Unique identifier for the semester, e.g., "fall-2025"
+  // semester_id: string; // Unique identifier for the semester, e.g., "fall-2025"
   schedule_name: string; // e.g., "Fall 2025"
   start_date: string; // e.g., "2025-08-05"
   end_date: string; // e.g., "2025-12-15"
@@ -47,11 +47,11 @@ const DaysSchema = new Schema<Days>({
     day: { type: String, required: true },
     start_time: { type: String, required: true },
     end_time: { type: String, required: true },
-    room: { type: String, required: true}
+    room: { type: String, required: false }
 })
 
 const SemesterSchema = new Schema<semester>({
-    semester_id: { type: String, required: true },
+    // semester_id: { type: String, required: true },
     schedule_name: { type: String, required: true },
     start_date: { type: String, required: true },
     end_date: { type: String, required: true },
@@ -68,8 +68,8 @@ const ClassSchema = new Schema<Class>({
 const ScheduleSchema = new Schema<Schedule>({
   semester: SemesterSchema,
   classes: [ClassSchema],
-  schedule_id: { type: Number, required: true },
-  created_at: { type: Date, required: true },
+  schedule_id: { type: String, required: true },
+  created_at: { type: Date, default: Date.now() },
   file_link: { type: String, required: false }
 });
 

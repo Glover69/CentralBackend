@@ -4,7 +4,7 @@ const router = express.Router()
 
 
 router.get("/get-data", getUserSchedules)
-router.post("/create", createSchedule)
+router.post("/save-schedule", createSchedule)
 
 
 export default router
