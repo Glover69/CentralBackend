@@ -8,4 +8,5 @@ const user_controller_1 = require("../controllers/user.controller");
 const router = express_1.default.Router();
 router.get("/get-data", user_controller_1.getUserSchedules);
 router.post("/save-schedule", user_controller_1.createSchedule);
+router.delete("/delete-one", user_controller_1.deleteSchedule);
 exports.default = router;

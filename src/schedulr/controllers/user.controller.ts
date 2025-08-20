@@ -80,3 +80,69 @@ export const createSchedule = [requireAuth, async (req: Request, res: Response):
 }]
 
 
+
+export const deleteSchedule = [requireAuth, async (req: Request, res: Response): Promise<void> => {
+  const uid = req.user?.uid; 
+  const { scheduleId } = req.query;
+  
+  // Input validation
+  if (!scheduleId || typeof scheduleId !== 'string') {
+    res.status(400).json({ error: "Schedule ID is required" });
+    return;
+  }
+
+  if (!scheduleId.startsWith('sch-')) {
+    res.status(400).json({ error: "Invalid schedule ID format" });
+    return;
+  }
+
+  try {
+    // Find user and ensure they own the schedule
+    const user = await SchedulrUserModel.findOne({ id: uid });
+    
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    // Check if schedule exists and belongs to the user
+    const scheduleIndex = user.schedules.findIndex(
+      schedule => schedule.schedule_id === scheduleId
+    );
+
+    if (scheduleIndex === -1) {
+      res.status(404).json({ 
+        error: "Schedule not found or you don't have permission to delete it" 
+      });
+      return;
+    }
+
+    // Store schedule info for response (before deletion)
+    const deletedSchedule = user.schedules[scheduleIndex];
+
+    // Remove the schedule
+    user.schedules.splice(scheduleIndex, 1);
+    await user.save();
+
+    // Log for audit trail
+    console.log(`🗑️ User ${uid} deleted schedule: ${scheduleId} (${deletedSchedule.semester.schedule_name})`);
+
+    res.status(200).json({
+      message: "Schedule deleted successfully",
+      deletedSchedule: {
+        schedule_id: deletedSchedule.schedule_id,
+        schedule_name: deletedSchedule.semester.schedule_name,
+        created_at: deletedSchedule.created_at
+      }
+    });
+
+  } catch (error) {
+    console.error("Delete schedule error:", error);
+    res.status(500).json({
+      message: "Unable to delete schedule at this time",
+      error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+    });
+  }
+}];
+
+
