@@ -5,7 +5,7 @@
   "main": "index.js",
    "scripts": {
     "build": "npx tsc",
-    "start": "NODE_ENV=production node dist/central.js",
+    "start": "npx tsc && NODE_ENV=production node dist/central.js --env dotenv_config_path=.env",
     "dev": "NODE_ENV=development nodemon --exec \"ts-node -r dotenv/config src/central.ts\" --env dotenv_config_path=.env.local",
     "dev:cloud": "NODE_ENV=development nodemon --exec \"ts-node -r dotenv/config src/central.ts\" --env dotenv_config_path=.env",
     "test": "echo \"Error: no test specified\" && exit 1"
