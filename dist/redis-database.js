@@ -38,13 +38,11 @@ exports.connectRedis = exports.redisClient = void 0;
 // };
 const redis_1 = require("redis");
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-const redisPassword = process.env.REDIS_PASSWORD;
 // Parse Redis URL to determine if it's local or cloud
 const isLocalRedis = redisUrl.includes('localhost') || redisUrl.includes('127.0.0.1');
-exports.redisClient = (0, redis_1.createClient)(Object.assign({ url: redisUrl }, (isLocalRedis ? {} : {
-    username: 'default',
-    password: redisPassword,
-})));
+exports.redisClient = (0, redis_1.createClient)({
+    url: redisUrl, // Use the full URL for both local and cloud Redis
+});
 exports.redisClient.on('error', (err) => console.error('Redis Client Error:', err));
 // Function to connect and handle initial connection errors
 const connectRedis = () => __awaiter(void 0, void 0, void 0, function* () {

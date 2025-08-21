@@ -33,18 +33,12 @@
 import { createClient } from 'redis';
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-const redisPassword = process.env.REDIS_PASSWORD;
 
 // Parse Redis URL to determine if it's local or cloud
 const isLocalRedis = redisUrl.includes('localhost') || redisUrl.includes('127.0.0.1');
 
 export const redisClient = createClient({
-  url: redisUrl,
-  // Only use username/password for cloud Redis
-  ...(isLocalRedis ? {} : {
-    username: 'default',
-    password: redisPassword,
-  })
+  url: redisUrl, // Use the full URL for both local and cloud Redis
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error:', err));
