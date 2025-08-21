@@ -4,7 +4,7 @@ import multer from "multer";
 import AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import * as dotenv from "dotenv";
-dotenv.config();
+// dotenv.config();
 
 const upload = multer();
 

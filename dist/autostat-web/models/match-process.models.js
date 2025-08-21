@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MatchStatsModel = void 0;
+exports.getMatchStatsModel = void 0;
 const mongoose_1 = require("mongoose");
-const auth_models_1 = require("./auth.models");
+const database_1 = require("../../database");
 // --- Sub-schemas for better organization ---
 const PlayerStatsSchema = new mongoose_1.Schema({
     name: { type: String, required: false },
@@ -162,5 +162,12 @@ const MatchStatsSchema = new mongoose_1.Schema({
         stats: { type: FullMatchStatsSchema, required: false } // The entire stats object is optional
     }
 }, { collection: 'matchStats', timestamps: true }); // Added timestamps for createdAt/updatedAt
-const MatchStatsModel = auth_models_1.AutoStatDbConnection.model('matchStats', MatchStatsSchema);
-exports.MatchStatsModel = MatchStatsModel;
+let MatchStatsModel = null;
+const getMatchStatsModel = () => {
+    if (!MatchStatsModel) {
+        const hisMajesty = (0, database_1.getConnection)('hisMajesty');
+        MatchStatsModel = hisMajesty.model('matchStats', MatchStatsSchema);
+    }
+    return MatchStatsModel;
+};
+exports.getMatchStatsModel = getMatchStatsModel;

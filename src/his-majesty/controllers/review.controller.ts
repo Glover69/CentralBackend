@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { reviewsModel } from "../models/reviews.models";
+import { getReviewsModel } from '../models/reviews.models';
 
 // Get all reviews
 export const getReviews = async (req: Request, res: Response) => {
   try {
+    const reviewsModel = getReviewsModel(); // Call it inside the function
     const reviewData = await reviewsModel.find();
     res.status(200).send(reviewData);
   } catch (error) {
@@ -14,6 +15,7 @@ export const getReviews = async (req: Request, res: Response) => {
 
 export const getReviewsByProductId = async (req: Request, res: Response) => {
   try {
+    const reviewsModel = getReviewsModel();
     const { productId } = req.params;
     const reviewData = await reviewsModel.find({ productId });
     res.status(200).send(reviewData);
@@ -26,6 +28,8 @@ export const getReviewsByProductId = async (req: Request, res: Response) => {
 // Create a new review
 export const createReview = async (req: Request, res: Response) => {
   try {
+    const reviewsModel = getReviewsModel();
+    
     const {
       ratingValue,
       reviewMessage,

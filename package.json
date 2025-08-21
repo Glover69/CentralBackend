@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
+   "scripts": {
     "build": "npx tsc",
-    "start": "npx tsc && node dist/central.js",
-    "dev": "nodemon src/central.ts",
+    "start": "NODE_ENV=production node dist/central.js",
+    "dev": "NODE_ENV=development nodemon --exec \"ts-node -r dotenv/config src/central.ts\" --env dotenv_config_path=.env.local",
+    "dev:cloud": "NODE_ENV=development nodemon --exec \"ts-node -r dotenv/config src/central.ts\" --env dotenv_config_path=.env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

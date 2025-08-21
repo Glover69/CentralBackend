@@ -8,7 +8,7 @@ import { CollectionModel } from "../models/collection.models";
 // import { nanoid } from 'nanoid'; 
 // const { nanoid } = await import('nanoid');
 
-dotenv.config();
+// dotenv.config();
 
 // Configure AWS SDK
 const s3 = new AWS.S3({

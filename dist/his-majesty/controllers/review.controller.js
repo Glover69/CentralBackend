@@ -14,7 +14,8 @@ const reviews_models_1 = require("../models/reviews.models");
 // Get all reviews
 const getReviews = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const reviewData = yield reviews_models_1.reviewsModel.find();
+        const reviewsModel = (0, reviews_models_1.getReviewsModel)(); // Call it inside the function
+        const reviewData = yield reviewsModel.find();
         res.status(200).send(reviewData);
     }
     catch (error) {
@@ -25,8 +26,9 @@ const getReviews = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.getReviews = getReviews;
 const getReviewsByProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const reviewsModel = (0, reviews_models_1.getReviewsModel)();
         const { productId } = req.params;
-        const reviewData = yield reviews_models_1.reviewsModel.find({ productId });
+        const reviewData = yield reviewsModel.find({ productId });
         res.status(200).send(reviewData);
     }
     catch (error) {
@@ -38,6 +40,7 @@ exports.getReviewsByProductId = getReviewsByProductId;
 // Create a new review
 const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const reviewsModel = (0, reviews_models_1.getReviewsModel)();
         const { ratingValue, reviewMessage, reviewTitle, firstName, lastName, initials, email, profileImage, productId, } = req.body;
         // Validate firstName and lastName before using them
         if (typeof firstName !== "string" || typeof lastName !== "string") {
@@ -59,7 +62,7 @@ const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             productId,
         };
         reviewData.initials = `${firstName.charAt(0) || ''}${lastName.charAt(0) || ''}`;
-        const savedReview = yield reviews_models_1.reviewsModel.create(reviewData);
+        const savedReview = yield reviewsModel.create(reviewData);
         if (savedReview) {
             res.status(201).json({
                 message: "Added new review successfully",

@@ -22,6 +22,7 @@ export const getUserSchedules = [requireAuth, async (
     }
 
     res.status(200).send({schedules: userData.schedules ?? [] });
+    console.log({ schedules: userData.schedules ?? []})
   } catch (error) {
     console.error("Get user data error:", error);
     res

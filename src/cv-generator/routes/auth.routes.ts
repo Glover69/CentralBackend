@@ -10,7 +10,7 @@ import { Request, Response } from "express";
 import { OTPVerificationModel } from "../models/otp-verification.models";
 import { SecretModel } from "../models/secret.models";
 
-dotenv.config();
+// dotenv.config();
 
 // Nodemailer
 const transporter = nodemailer.createTransport({

@@ -1,8 +1,7 @@
 // src/database.ts
 
 import mongoose, { Connection, ConnectOptions } from 'mongoose';
-import * as dotenv from 'dotenv';
-dotenv.config(); // Load environment variables from .env file
+// dotenv.config(); // Load environment variables from .env file
 
 // Define database configuration interface
 interface DatabaseConfig {
@@ -13,10 +12,18 @@ interface DatabaseConfig {
 
 
 // Database configurations
-const databases: DatabaseConfig[] = [
+const databases: DatabaseConfig[] = [  
   {
     name: 'main',
     uri: process.env.MONGODB_URI || '',
+    options: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    } as ConnectOptions
+  },
+  {
+    name: 'hisMajesty',
+    uri: process.env.MONGODB_URI_TWO || '',
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,

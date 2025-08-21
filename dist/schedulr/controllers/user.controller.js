@@ -14,7 +14,7 @@ const user_models_1 = require("../models/user.models");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const uuid_1 = require("uuid");
 exports.getUserSchedules = [auth_middleware_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b;
+        var _a, _b, _c;
         const uid = (_a = req.user) === null || _a === void 0 ? void 0 : _a.uid; // set by requireAuth from the cookie session
         if (!uid) {
             res.status(401).json({ error: 'Unauthorized' });
@@ -28,6 +28,7 @@ exports.getUserSchedules = [auth_middleware_1.requireAuth, (req, res) => __await
                 return;
             }
             res.status(200).send({ schedules: (_b = userData.schedules) !== null && _b !== void 0 ? _b : [] });
+            console.log({ schedules: (_c = userData.schedules) !== null && _c !== void 0 ? _c : [] });
         }
         catch (error) {
             console.error("Get user data error:", error);

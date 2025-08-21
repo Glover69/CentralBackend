@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
 import dotenv from "dotenv";
 import { authMiddleware, conditionalAuth } from "../middlewares/auth.middleware";
-import { MatchStatsModel } from "../models/match-process.models";
+// import { MatchStatsModel } from "../models/match-process.models";
 import { v4 as uuidv4 } from "uuid";
+import { getMatchStatsModel } from "../models/match-process.models";
 
-dotenv.config();
+// dotenv.config();
 
 
 export const getAllMatchProcesses = [conditionalAuth, async (req: any, res: any): Promise<void> => {
     try {
+        const MatchStatsModel = getMatchStatsModel();
         const matchProcesses = await MatchStatsModel.find();
         res.status(200).json(matchProcesses);
     } catch (error) {
@@ -28,6 +30,7 @@ export const getSpecificMatchProcess = [conditionalAuth, async (req: Request, re
     }
 
     try {
+        const MatchStatsModel = getMatchStatsModel();
         const matchProcess = await MatchStatsModel.findOne({ 'match.id': id});
 
         if(!matchProcess){
@@ -119,6 +122,7 @@ export const addMatchProcess = [conditionalAuth, async (req: Request, res: Respo
         matchData.match.stats = matchData.match.stats || {}; // Ensure stats is an object, even if empty
 
         // It's good practice to check if a resource with this unique ID already exists
+        const MatchStatsModel = getMatchStatsModel();
         const existingMatch = await MatchStatsModel.findOne({ id: matchData.match.id });
         if (existingMatch) {
             res.status(409).json({ message: `A match process with ID ${matchData.match.id} already exists.` }); // 409 Conflict
