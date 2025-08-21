@@ -8,19 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addMatchProcess = exports.getSpecificMatchProcess = exports.getAllMatchProcesses = void 0;
-const dotenv_1 = __importDefault(require("dotenv"));
 const auth_middleware_1 = require("../middlewares/auth.middleware");
-const match_process_models_1 = require("../models/match-process.models");
+// import { MatchStatsModel } from "../models/match-process.models";
 const uuid_1 = require("uuid");
-dotenv_1.default.config();
+const match_process_models_1 = require("../models/match-process.models");
+// dotenv.config();
 exports.getAllMatchProcesses = [auth_middleware_1.conditionalAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const matchProcesses = yield match_process_models_1.MatchStatsModel.find();
+            const MatchStatsModel = (0, match_process_models_1.getMatchStatsModel)();
+            const matchProcesses = yield MatchStatsModel.find();
             res.status(200).json(matchProcesses);
         }
         catch (error) {
@@ -36,7 +34,8 @@ exports.getSpecificMatchProcess = [auth_middleware_1.conditionalAuth, (req, res)
             return;
         }
         try {
-            const matchProcess = yield match_process_models_1.MatchStatsModel.findOne({ 'match.id': id });
+            const MatchStatsModel = (0, match_process_models_1.getMatchStatsModel)();
+            const matchProcess = yield MatchStatsModel.findOne({ 'match.id': id });
             if (!matchProcess) {
                 res.status(404).json({ message: `Could not find match process with ID ${id}` });
                 return;
@@ -112,14 +111,15 @@ exports.addMatchProcess = [auth_middleware_1.conditionalAuth, (req, res) => __aw
             matchData.match.isProcessed = false; // Default to false when adding a new match process
             matchData.match.stats = matchData.match.stats || {}; // Ensure stats is an object, even if empty
             // It's good practice to check if a resource with this unique ID already exists
-            const existingMatch = yield match_process_models_1.MatchStatsModel.findOne({ id: matchData.match.id });
+            const MatchStatsModel = (0, match_process_models_1.getMatchStatsModel)();
+            const existingMatch = yield MatchStatsModel.findOne({ id: matchData.match.id });
             if (existingMatch) {
                 res.status(409).json({ message: `A match process with ID ${matchData.match.id} already exists.` }); // 409 Conflict
                 return;
             }
             // Pass the entire request body to the model constructor.
             // Mongoose will map the fields that are defined in the schema.
-            const newMatchProcess = new match_process_models_1.MatchStatsModel(matchData);
+            const newMatchProcess = new MatchStatsModel(matchData);
             const savedMatchProcess = yield newMatchProcess.save();
             res.status(201).json({
                 message: "Match process added successfully.",

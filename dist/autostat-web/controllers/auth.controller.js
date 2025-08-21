@@ -14,15 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupAdmin = exports.loginAdmin = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const uuid_1 = require("uuid");
 const auth_models_1 = require("../models/auth.models");
-dotenv_1.default.config();
+// import { UserModel } from "../models/auth.models";
+// dotenv.config();
 const loginAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
-        const user = yield auth_models_1.UserModel.findOne({ email: email });
+        const UserModel = (0, auth_models_1.getUserModel)();
+        const user = yield UserModel.findOne({ email: email });
         if (!user) {
             res.status(400).json({ error: "Email does't exist in our database" });
             return;
@@ -34,7 +35,16 @@ const loginAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             return;
         }
         const token = jsonwebtoken_1.default.sign({ id: user.userID, email: user.email }, process.env.AUTOSTAT_JWT_SECRET, { expiresIn: "1h" });
-        res.json({ token: token, admin: { email: user.email, firstName: user.firstName, lastName: user.lastName, organization: user.organization, userID: user.userID }, });
+        res.json({
+            token: token,
+            admin: {
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                organization: user.organization,
+                userID: user.userID,
+            },
+        });
     }
     catch (error) {
         console.error("Login error:", error);
@@ -46,11 +56,14 @@ const loginAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.loginAdmin = loginAdmin;
 // Sign a new admin up
 const signupAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const UserModel = (0, auth_models_1.getUserModel)();
     const { email, password, firstName, lastName, profile, organization } = req.body;
     // Check if user already exists
-    const existingUser = yield auth_models_1.UserModel.findOne({ email: email });
+    const existingUser = yield UserModel.findOne({ email: email });
     if (existingUser) {
-        res.status(400).json({ error: "This email already exists. Try logging in instead" });
+        res
+            .status(400)
+            .json({ error: "This email already exists. Try logging in instead" });
         return;
     }
     // Hash password
@@ -65,16 +78,18 @@ const signupAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         firstName,
         lastName,
         profile,
-        organization
+        organization,
     };
     // Save structure to database
-    yield auth_models_1.UserModel.create(userData);
+    yield UserModel.create(userData);
     // Generate verification token
-    const token = jsonwebtoken_1.default.sign({ email }, process.env.AUTOSTAT_JWT_SECRET, { expiresIn: "1h" });
+    const token = jsonwebtoken_1.default.sign({ email }, process.env.AUTOSTAT_JWT_SECRET, {
+        expiresIn: "1h",
+    });
     res.status(201).json({
         message: "Onboarded user successfully.",
         admin: userData,
-        token: token
+        token: token,
     });
 });
 exports.signupAdmin = signupAdmin;

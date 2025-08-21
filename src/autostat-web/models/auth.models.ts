@@ -1,18 +1,19 @@
 import mongoose, { ConnectOptions, Document, Schema } from 'mongoose';
 import * as dotenv from 'dotenv';
-dotenv.config(); // Load environment variables from .env file
+import { getConnection } from '../../database';
+// dotenv.config(); // Load environment variables from .env file
 
-const dbUrlAutoStat = process.env.MONGODB_URI_AUTOSTAT;
+// const dbUrlAutoStat = process.env.MONGODB_URI_AUTOSTAT;
 
-if (!dbUrlAutoStat) {
-  console.error('MongoDB URIs are missing. Check your environment variables.');
-  process.exit(1);
-}
+// if (!dbUrlAutoStat) {
+//   console.error('MongoDB URIs are missing. Check your environment variables.');
+//   process.exit(1);
+// }
 
-export const AutoStatDbConnection = mongoose.createConnection(dbUrlAutoStat, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  } as ConnectOptions);
+// export const AutoStatDbConnection = mongoose.createConnection(dbUrlAutoStat, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   } as ConnectOptions);
 
 interface User extends Document {
   email: string;
@@ -35,6 +36,16 @@ const UserSchema = new Schema<User>({
   organization: { type: String, required: true },
 }, { collection: 'users' });
 
-const UserModel = AutoStatDbConnection.model<User>('users', UserSchema);
+let UserModel: mongoose.Model<User> | null = null;
 
-export { User, UserModel };
+const getUserModel = () => {
+  if (!UserModel) {
+    const hisMajesty = getConnection('hisMajesty');
+    UserModel = hisMajesty.model<User>('reviews', UserSchema);
+  }
+  return UserModel;
+};
+
+// const UserModel = AutoStatDbConnection.model<User>('users', UserSchema);
+
+export { User, getUserModel };

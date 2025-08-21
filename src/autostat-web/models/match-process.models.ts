@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { AutoStatDbConnection } from "./auth.models";
+import { getConnection } from "../../database";
+// import { AutoStatDbConnection } from "./auth.models";
 
 // Interface for a single player's stats
 interface PlayerStats {
@@ -262,6 +263,17 @@ const MatchStatsSchema = new Schema<MatchStatsProps>({
     }
 }, { collection: 'matchStats', timestamps: true }); // Added timestamps for createdAt/updatedAt
 
-const MatchStatsModel = AutoStatDbConnection.model<MatchStatsProps>('matchStats', MatchStatsSchema);
 
-export { MatchStatsProps, MatchStatsModel };
+let MatchStatsModel: mongoose.Model<MatchStatsProps> | null = null;
+
+const getMatchStatsModel = () => {
+  if (!MatchStatsModel) {
+    const hisMajesty = getConnection('hisMajesty');
+    MatchStatsModel = hisMajesty.model<MatchStatsProps>('matchStats', MatchStatsSchema);
+  }
+  return MatchStatsModel;
+};
+
+// const MatchStatsModel = AutoStatDbConnection.model<MatchStatsProps>('matchStats', MatchStatsSchema);
+
+export { MatchStatsProps, getMatchStatsModel };

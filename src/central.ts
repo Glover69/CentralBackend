@@ -8,13 +8,19 @@ import { initializeTypingTestSocket } from "./typing-test/socket/server";
 import { connectRedis } from "./redis-database";
 import { setupRoutes } from "./routes-index";
 import cookieParser from 'cookie-parser';
-import { authCallback } from "./schedulr/controllers/google-auth.controller";
 
 
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
+
+// Temporary check - remove after confirming
+console.log('🔍 Environment check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('SCHEDULR_DEV_URL:', process.env.SCHEDULR_DEV_URL);
+console.log('MONGODB_URI_SCHEDULR:', process.env.MONGODB_URI_SCHEDULR);
+console.log('---');
 
 
 // Middleware to parse JSON bodies
