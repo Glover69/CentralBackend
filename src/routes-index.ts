@@ -16,6 +16,7 @@ export const setupRoutes = async (app: Express) => {
   // Dynamically import Schedulr routes (these need database connections)
   const { default: GoogleAuthRoutes } = await import('./schedulr/routes/google-auth.routes');
   const { default: SchedulrUserRoutes } = await import('./schedulr/routes/user.routes');
+  const { default: SchedulrFeedbackRoutes } = await import('./schedulr/routes/feedback.routes');
   console.log('✅ Schedulr routes imported successfully');
 
   // CV Generator & AI routes
@@ -30,6 +31,7 @@ export const setupRoutes = async (app: Express) => {
   // Schedulr routes
   app.use('/api/schedulr/google-auth', GoogleAuthRoutes);
   app.use('/api/schedulr/user', SchedulrUserRoutes);
+  app.use('/api/schedulr/feedback', SchedulrFeedbackRoutes);
   console.log('✅ Schedulr routes registered at /api/schedulr/google-auth');
   
   // AutoStat routes

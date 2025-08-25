@@ -60,6 +60,7 @@ const setupRoutes = (app) => __awaiter(void 0, void 0, void 0, function* () {
     // Dynamically import Schedulr routes (these need database connections)
     const { default: GoogleAuthRoutes } = yield Promise.resolve().then(() => __importStar(require('./schedulr/routes/google-auth.routes')));
     const { default: SchedulrUserRoutes } = yield Promise.resolve().then(() => __importStar(require('./schedulr/routes/user.routes')));
+    const { default: SchedulrFeedbackRoutes } = yield Promise.resolve().then(() => __importStar(require('./schedulr/routes/feedback.routes')));
     console.log('✅ Schedulr routes imported successfully');
     // CV Generator & AI routes
     app.use('/api/cv-generator', CV_GeneratorRoutes_1.CVGeneratorRoutes);
@@ -71,6 +72,7 @@ const setupRoutes = (app) => __awaiter(void 0, void 0, void 0, function* () {
     // Schedulr routes
     app.use('/api/schedulr/google-auth', GoogleAuthRoutes);
     app.use('/api/schedulr/user', SchedulrUserRoutes);
+    app.use('/api/schedulr/feedback', SchedulrFeedbackRoutes);
     console.log('✅ Schedulr routes registered at /api/schedulr/google-auth');
     // AutoStat routes
     app.use('/api/autostat-web/auth', auth_autostat_routes_1.default);
