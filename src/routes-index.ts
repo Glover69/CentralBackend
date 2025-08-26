@@ -9,7 +9,6 @@ import reviewRoutes from './his-majesty/routes/review.routes';
 import authautostatRoutes from "./autostat-web/routes/auth-autostat.routes";
 import matchprocessesRoutes from "./autostat-web/routes/match-process.routes";
 import autostatutilsroutes from "./autostat-web/routes/autostat-utils.routes";
-import { callbackCors } from './central';
 
 
 export const setupRoutes = async (app: Express) => {

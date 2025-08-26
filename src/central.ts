@@ -40,14 +40,14 @@ app.use((req, res, next) => {
 });
 
 // 1) Callback route first, with relaxed CORS (or none)
-export const callbackCors = cors({
-  origin: (origin, cb) => {
-    // Allow top-level POSTs from Google and cases where Origin is 'null'
-    if (!origin || origin === 'null' || origin === 'https://accounts.google.com') return cb(null, true);
-    return cb(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-});
+// export const callbackCors = cors({
+//   origin: (origin, cb) => {
+//     // Allow top-level POSTs from Google and cases where Origin is 'null'
+//     if (!origin || origin === 'null' || origin === 'https://accounts.google.com') return cb(null, true);
+//     return cb(new Error('Not allowed by CORS'));
+//   },
+//   credentials: true,
+// });
 
 const allowedOrigins = ['https://schedulr-omega.vercel.app', 'https://schedulr-git-dev-daniel-glovers-projects.vercel.app', 'http://localhost:4200', 'null', 'https://accounts.google.com', 'https://auto-stat-web-platform.vercel.app', 'https://typing-test-game-two.vercel.app', 'https://light-frank-crayfish.ngrok-free.app', 'http://localhost:6969', 'http://localhost:3000', 'https://mpampacereals.com', 'https://www.mpampacereals.com', 'https://data-collection-nine.vercel.app', 'http://localhost:8000', 'https://cv-gen-six.vercel.app'];
 
