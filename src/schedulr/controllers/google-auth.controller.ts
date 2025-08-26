@@ -114,3 +114,31 @@ export const getMe = [
     res.json({ user: req.user });
   },
 ];
+
+export const logout = (req: Request, res: Response) => {
+  try {
+    // Clear the JWT cookie by setting it to expire immediately
+    res.clearCookie('schedulr_session', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+
+    // Log for audit trail
+    console.log(`🚪 User logged out successfully`);
+
+    // Return success response
+    res.status(200).json({
+      message: "Logged out successfully",
+      success: true
+    });
+
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({
+      message: "Unable to logout at this time",
+      error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+    });
+  }
+};

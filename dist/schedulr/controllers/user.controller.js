@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSchedule = exports.createSchedule = exports.getUserSchedules = void 0;
+exports.updateSchedule = exports.getScheduleById = exports.deleteSchedule = exports.createSchedule = exports.getUserSchedules = void 0;
 const user_models_1 = require("../models/user.models");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const uuid_1 = require("uuid");
@@ -125,6 +125,106 @@ exports.deleteSchedule = [auth_middleware_1.requireAuth, (req, res) => __awaiter
             console.error("Delete schedule error:", error);
             res.status(500).json({
                 message: "Unable to delete schedule at this time",
+                error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+            });
+        }
+    })];
+exports.getScheduleById = [auth_middleware_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b;
+        const uid = (_a = req.user) === null || _a === void 0 ? void 0 : _a.uid;
+        const { scheduleId } = req.query;
+        // Input validation
+        if (!scheduleId || typeof scheduleId !== 'string') {
+            res.status(400).json({ error: "Schedule ID is required" });
+            return;
+        }
+        if (!scheduleId.startsWith('sch-')) {
+            res.status(400).json({ error: "Invalid schedule ID format" });
+            return;
+        }
+        try {
+            // Find user
+            const user = yield user_models_1.SchedulrUserModel.findOne({ id: uid }).lean();
+            if (!user) {
+                res.status(404).json({ error: "User not found" });
+                return;
+            }
+            // Find the specific schedule
+            const schedule = (_b = user.schedules) === null || _b === void 0 ? void 0 : _b.find(schedule => schedule.schedule_id === scheduleId);
+            if (!schedule) {
+                res.status(404).json({
+                    error: "Schedule not found or you don't have permission to access it"
+                });
+                return;
+            }
+            res.status(200).json({
+                message: "Schedule retrieved successfully",
+                schedule: schedule
+            });
+        }
+        catch (error) {
+            console.error("Get schedule by ID error:", error);
+            res.status(500).json({
+                message: "Unable to retrieve schedule at this time",
+                error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+            });
+        }
+    })];
+exports.updateSchedule = [auth_middleware_1.requireAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        const uid = (_a = req.user) === null || _a === void 0 ? void 0 : _a.uid;
+        const { scheduleId } = req.query;
+        const { semester, classes } = req.body;
+        // Input validation
+        if (!scheduleId || typeof scheduleId !== 'string') {
+            res.status(400).json({ error: "Schedule ID is required" });
+            return;
+        }
+        if (!scheduleId.startsWith('sch-')) {
+            res.status(400).json({ error: "Invalid schedule ID format" });
+            return;
+        }
+        if (!semester && !classes) {
+            res.status(400).json({ error: "At least one field (semester or classes) is required for update" });
+            return;
+        }
+        try {
+            // Find user (not using .lean() since we need to save)
+            const user = yield user_models_1.SchedulrUserModel.findOne({ id: uid });
+            if (!user) {
+                res.status(404).json({ error: "User not found" });
+                return;
+            }
+            // Find the specific schedule index
+            const scheduleIndex = user.schedules.findIndex(schedule => schedule.schedule_id === scheduleId);
+            if (scheduleIndex === -1) {
+                res.status(404).json({
+                    error: "Schedule not found or you don't have permission to update it"
+                });
+                return;
+            }
+            // Update only the provided fields
+            if (semester) {
+                user.schedules[scheduleIndex].semester = semester;
+            }
+            if (classes) {
+                user.schedules[scheduleIndex].classes = classes;
+            }
+            // Save the updated user document
+            yield user.save();
+            // Get the updated schedule for response
+            const updatedSchedule = user.schedules[scheduleIndex];
+            // Log for audit trail
+            console.log(`📝 User ${uid} updated schedule: ${scheduleId} (${updatedSchedule.semester.schedule_name})`);
+            res.status(200).json({
+                message: "Schedule updated successfully",
+                schedule: updatedSchedule
+            });
+        }
+        catch (error) {
+            console.error("Update schedule error:", error);
+            res.status(500).json({
+                message: "Unable to update schedule at this time",
                 error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
             });
         }
