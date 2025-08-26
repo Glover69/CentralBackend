@@ -16,17 +16,28 @@ const app = express();
 const port = process.env.PORT;
 
 // Temporary check - remove after confirming
-console.log('🔍 Environment check:');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('SCHEDULR_DEV_URL:', process.env.SCHEDULR_DEV_URL);
-console.log('MONGODB_URI_SCHEDULR:', process.env.MONGODB_URI_SCHEDULR);
-console.log('---');
+// console.log('🔍 Environment check:');
+// console.log('NODE_ENV:', process.env.NODE_ENV);
+// console.log('SCHEDULR_DEV_URL:', process.env.SCHEDULR_DEV_URL);
+// console.log('MONGODB_URI_SCHEDULR:', process.env.MONGODB_URI_SCHEDULR);
+// console.log('---');
 
 
 // Middleware to parse JSON bodies
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  if (req.path.includes('google-auth')) {
+    console.log('📱 OAuth Request Debug:');
+    console.log('Origin:', req.headers.origin);
+    console.log('Referer:', req.headers.referer);
+    console.log('User-Agent:', req.headers['user-agent']);
+    console.log('---');
+  }
+  next();
+});
 
 // 1) Callback route first, with relaxed CORS (or none)
 export const callbackCors = cors({
@@ -43,13 +54,19 @@ const allowedOrigins = ['https://schedulr-omega.vercel.app', 'https://schedulr-g
 // Use CORS middleware with specific origins
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // More permissive for mobile browsers and OAuth flows
+    if (!origin || allowedOrigins.includes(origin) || origin === 'null') {
       callback(null, true);
     } else {
+      // Log the rejected origin for debugging
+      console.log('🚫 CORS rejected origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  // Add these for better mobile compatibility
+  optionsSuccessStatus: 200, // For legacy browser support
+  preflightContinue: false
 }));
 
 

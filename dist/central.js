@@ -26,15 +26,25 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 const port = process.env.PORT;
 // Temporary check - remove after confirming
-console.log('🔍 Environment check:');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('SCHEDULR_DEV_URL:', process.env.SCHEDULR_DEV_URL);
-console.log('MONGODB_URI_SCHEDULR:', process.env.MONGODB_URI_SCHEDULR);
-console.log('---');
+// console.log('🔍 Environment check:');
+// console.log('NODE_ENV:', process.env.NODE_ENV);
+// console.log('SCHEDULR_DEV_URL:', process.env.SCHEDULR_DEV_URL);
+// console.log('MONGODB_URI_SCHEDULR:', process.env.MONGODB_URI_SCHEDULR);
+// console.log('---');
 // Middleware to parse JSON bodies
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
+app.use((req, res, next) => {
+    if (req.path.includes('google-auth')) {
+        console.log('📱 OAuth Request Debug:');
+        console.log('Origin:', req.headers.origin);
+        console.log('Referer:', req.headers.referer);
+        console.log('User-Agent:', req.headers['user-agent']);
+        console.log('---');
+    }
+    next();
+});
 // 1) Callback route first, with relaxed CORS (or none)
 exports.callbackCors = (0, cors_1.default)({
     origin: (origin, cb) => {
@@ -49,14 +59,20 @@ const allowedOrigins = ['https://schedulr-omega.vercel.app', 'https://schedulr-g
 // Use CORS middleware with specific origins
 app.use((0, cors_1.default)({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        // More permissive for mobile browsers and OAuth flows
+        if (!origin || allowedOrigins.includes(origin) || origin === 'null') {
             callback(null, true);
         }
         else {
+            // Log the rejected origin for debugging
+            console.log('🚫 CORS rejected origin:', origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true
+    credentials: true,
+    // Add these for better mobile compatibility
+    optionsSuccessStatus: 200, // For legacy browser support
+    preflightContinue: false
 }));
 const httpServer = http_1.default.createServer(app);
 // Initialize Socket.IO server
