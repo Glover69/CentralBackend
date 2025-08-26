@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMe = exports.authCallback = void 0;
+exports.logout = exports.getMe = exports.authCallback = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_models_1 = require("../models/user.models");
 const google_auth_library_1 = require("google-auth-library");
@@ -91,3 +91,29 @@ exports.getMe = [
         res.json({ user: req.user });
     },
 ];
+const logout = (req, res) => {
+    try {
+        // Clear the JWT cookie by setting it to expire immediately
+        res.clearCookie('schedulr_session', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        });
+        // Log for audit trail
+        console.log(`🚪 User logged out successfully`);
+        // Return success response
+        res.status(200).json({
+            message: "Logged out successfully",
+            success: true
+        });
+    }
+    catch (error) {
+        console.error("Logout error:", error);
+        res.status(500).json({
+            message: "Unable to logout at this time",
+            error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+        });
+    }
+};
+exports.logout = logout;

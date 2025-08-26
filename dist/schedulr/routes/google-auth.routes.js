@@ -9,4 +9,5 @@ const central_1 = require("../../central");
 const router = express_1.default.Router();
 router.post("/auth-callback", central_1.callbackCors, google_auth_controller_1.authCallback);
 router.get('/me', google_auth_controller_1.getMe);
+router.post('/logout', google_auth_controller_1.logout);
 exports.default = router;
