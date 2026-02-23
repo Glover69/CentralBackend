@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.getMe = exports.authCallback = void 0;
+exports.mobileAuth = exports.logout = exports.getMe = exports.authCallback = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_models_1 = require("../models/user.models");
 const google_auth_library_1 = require("google-auth-library");
@@ -117,3 +117,60 @@ const logout = (req, res) => {
     }
 };
 exports.logout = logout;
+/**
+ * Mobile auth endpoint.
+ * Receives a Google ID token from the mobile app, verifies it server-side,
+ * upserts the user in the database, and returns a JWT + user data as JSON.
+ */
+const mobileAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { idToken } = req.body || {};
+        if (!idToken) {
+            res.status(400).json({ error: "missing_id_token" });
+            return;
+        }
+        // Verify ID token with Google
+        const ticket = yield googleClient.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_IOS_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        if (!payload || !payload.sub || !payload.email) {
+            res.status(401).json({ error: "invalid_token" });
+            return;
+        }
+        // Upsert user (create if doesn't exist, update if it does)
+        const userDoc = yield user_models_1.SchedulrUserModel.findOneAndUpdate({ id: payload.sub }, {
+            id: payload.sub,
+            email: payload.email,
+            name: payload.name,
+            picture: payload.picture,
+            given_name: payload.given_name,
+            family_name: payload.family_name,
+        }, { upsert: true, new: true, setDefaultsOnInsert: true });
+        // Issue app JWT
+        const token = jsonwebtoken_1.default.sign({
+            uid: userDoc.id,
+            email: userDoc.email,
+            name: userDoc.name,
+            picture: userDoc.picture,
+        }, process.env.JWT_SECRET_SCHEDULR, { expiresIn: "7d" });
+        res.status(200).json({
+            success: true,
+            user: {
+                uid: userDoc.id,
+                email: userDoc.email,
+                name: userDoc.name,
+                picture: userDoc.picture,
+                given_name: userDoc.given_name,
+                family_name: userDoc.family_name,
+            },
+            token,
+        });
+    }
+    catch (err) {
+        console.error("Mobile auth error:", err);
+        res.status(500).json({ error: "auth_failed" });
+    }
+});
+exports.mobileAuth = mobileAuth;
